@@ -21,7 +21,7 @@ function Otp() {
                                         <label className="input-label">OTP *</label>
                                         <div className="input-group">
                                             <input type="text" className="form-control" placeholder="xxxxxx" value={otp} onChange={(e) => setOtp(e.target.value)} />
-                                            <span className="resend-otp-label"><span>Didn't Receive? </span><a href="" className="resend-link"> Resend</a></span>
+                                            <span className="resend-otp-label"><span>Didn't Receive? </span><div style={{ display: "inline-block" }} className="resend-link"> Resend</div></span>
                                         </div>
                                     </div>
                                     <div className="button-bar full-btn">

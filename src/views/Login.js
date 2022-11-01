@@ -104,7 +104,7 @@ function Login() {
                                             <div className="form-group"> <span className="checkbox">
                                                 <input onChange={() => setTermConditions(!termConditions)} checked={termConditions} type="checkbox" />
                                                 <label></label> </span>
-                                                <span className="check-label privacy-policy">I accept<a href="" onClick={() => { navigate('term_conditions') }} className="link-tag"> Terms & Conditions</a></span>  </div>
+                                                <span className="check-label privacy-policy">I accept <div style={{ display: "inline-block" }} onClick={() => { navigate('term_conditions') }} className="link-tag">  Terms & Conditions</div></span>  </div>
                                         </div>
                                         <div className="form-group"> <span className="checkbox">
                                             <input onChange={() => setBacardiRegards(!BacardiRegards)} checked={BacardiRegards} type="checkbox" />
