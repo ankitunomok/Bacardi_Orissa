@@ -1,18 +1,21 @@
+import axios from 'axios';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { asyncWrap } from '../asyncWrap';
 
 function Login() {
     const [mobile, setMobile] = useState("");
-    const [city, setCity] = useState("all select");
+    // const [city, setCity] = useState("all select");
     const [name, setName] = useState("");
     const navigate = useNavigate();
     const [drinkingAge, setDrinkingAge] = useState();
     const [termConditions, setTermConditions] = useState(false);
     const [BacardiRegards, setBacardiRegards] = useState(false);
+    const [email, setEmail] = useState("");
+    const [uniqueCode, setUniqueCode] = useState("");
     const mobileValidation = /^[0]?[6789]\d{9}$/;
 
-    const handleSubmit = () => {
-        console.log(name.length)
+    const handleSubmit = async () => {
         if (!mobileValidation.test(mobile)) {
             alert("Please enter valid mobile number");
             return;
@@ -33,13 +36,35 @@ function Login() {
             alert("Please Check get future communications from Bacardi in regards with offers.");
             return;
         }
-        console.log("name", name);
-        console.log("mobile", mobile);
-        console.log("city", city);
-        console.log("term_conditions", termConditions);
-        console.log("bacardivalidation", BacardiRegards);
 
-        navigate('otp');
+        const data = {
+            productId: "885",
+            name: name,
+            phoneNumber: `+91${mobile}`,
+            email: email,
+            tnc: 'Y',
+            ageGate: 'Y'
+        };
+
+        const config = {
+            method: "post",
+            url: "/register",
+            data: data,
+        };
+
+        const [error, result] = await asyncWrap(axios(config));
+        if (!result) {
+            console.log(error);
+            return;
+        }
+        if (result.data.status === "FAILURE") {
+            alert(result.data.message);
+            return;
+        } else {
+            localStorage.setItem("loginMob", mobile);
+            localStorage.setItem("uniquecode", uniqueCode);
+            navigate("/otp");
+        }
     }
 
     return (
@@ -67,7 +92,19 @@ function Login() {
                                                     <input type="tel" value={mobile} onChange={(e) => setMobile(e.target.value)} className="form-control" placeholder="Enter Mobile" />
                                                 </div>
                                             </div>
-                                            <div className="form-group">
+                                            <div class="form-group">
+                                                <label class="input-label">Email ID *</label>
+                                                <div class="input-group">
+                                                    <input type="tel" class="form-control" placeholder="Enter Email Id" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="input-label">Unique Code *</label>
+                                                <div class="input-group">
+                                                    <input type="tel" class="form-control" placeholder="Unique code" value={uniqueCode} onChange={(e) => setUniqueCode(e.target.value)} />
+                                                </div>
+                                            </div>
+                                            {/* <div className="form-group">
                                                 <label className="input-label">City *</label>
                                                 <div className="input-group select-group">
                                                     <select className="form-control" onChange={(e) => setCity(e.target.value)} value={city}>
@@ -75,7 +112,7 @@ function Login() {
                                                         <option value="jaipur">Jaipur</option>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div> */}
 
                                             <div className="form-group radio-group-btn ques-group">
                                                 <label className="input-label">Are you above legal drinking age? *</label>
@@ -135,7 +172,10 @@ function Login() {
                                         <div className="button-bar full-btn">
                                             <div className="button-bar-outer">
                                                 <div className="col">
-                                                    <button onClick={handleSubmit} className="btn primary-btn">Submit</button>
+                                                    <button onClick={(e) => {
+                                                        e.preventDefault();
+                                                        handleSubmit();
+                                                    }} className="btn primary-btn">Submit</button>
                                                 </div>
                                             </div>
                                         </div>
